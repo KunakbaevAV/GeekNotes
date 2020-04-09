@@ -2,4 +2,5 @@
 <resources>
     <dimen name="margin_medium">4dp</dimen>
     <dimen name="margin_big">8dp</dimen>
+    <dimen name="app_height">60dp</dimen>
 </resources>
