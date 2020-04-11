@@ -4,7 +4,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuItem
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.activity_note.*
@@ -15,7 +19,11 @@ import ru.geekbrains.geeknotes.data.model.Note
 import java.text.SimpleDateFormat
 import java.util.*
 
+private const val SAVE_DELAY = 2000L
+
 class NoteActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: NoteViewModel
 
     companion object {
         private val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
@@ -58,8 +66,15 @@ class NoteActivity : AppCompatActivity() {
                 Color.BLUE -> R.color.color_blue
             }
 
+            titleEt.addTextChangedListener(textChangeListener)
+            bodyEt.addTextChangedListener(textChangeListener)
+
             toolbar.setBackgroundColor(resources.getColor(color))
         }
+
+
+        viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean =
@@ -70,4 +85,36 @@ class NoteActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+    private val textChangeListener = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            triggerSaveNote()
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            // not used
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            // not used
+        }
+    }
+
+
+    private fun triggerSaveNote() {
+        if (titleEt.text == null || titleEt.text!!.length < 3) return
+
+        Handler().postDelayed({
+            note = note?.copy(title = titleEt.text.toString(),
+                note = bodyEt.text.toString(),
+                lastChanged = Date())
+
+            if (note != null) viewModel.saveChanges(note!!)
+        }, SAVE_DELAY)
+    }
+
+
+    private fun createNewNote(): Note = Note(UUID.randomUUID().toString(),
+        titleEt.text.toString(),
+        bodyEt.text.toString())
 }
