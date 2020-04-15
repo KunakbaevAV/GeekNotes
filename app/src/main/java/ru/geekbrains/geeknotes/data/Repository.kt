@@ -1,13 +1,15 @@
 package ru.geekbrains.geeknotes.data
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.geekbrains.geeknotes.data.model.Color
 import ru.geekbrains.geeknotes.data.model.Note
+import ru.geekbrains.geeknotes.data.provider.FireStoreProvider
+import ru.geekbrains.geeknotes.data.provider.RemoteDataProvider
 import java.util.*
 
 object Repository {
     private val notesLiveData = MutableLiveData<List<Note>>()
+    private val remoteProvider: RemoteDataProvider = FireStoreProvider()
 
     private val notes: MutableList<Note> = mutableListOf(
         Note(UUID.randomUUID().toString(),"Моя заметка 1", "Текст заметки", Color.WHITE),
@@ -32,14 +34,9 @@ object Repository {
         notesLiveData.value = notes
     }
 
-    fun getNotes(): LiveData<List<Note>> {
-        return notesLiveData
-    }
-
-    fun saveNote(note: Note) {
-        addOrReplace(note)
-        notesLiveData.value = notes
-    }
+    fun getNotes() = remoteProvider.subscribeToAllNotes()
+    fun saveNote(note: Note) = remoteProvider.saveNote(note)
+    fun getNoteById(id: String) = remoteProvider.getNoteById(id)
 
     private fun addOrReplace(note: Note) {
 

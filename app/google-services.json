@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "127352812751",
+    "firebase_url": "https://geeknote-c6167.firebaseio.com",
+    "project_id": "geeknote-c6167",
+    "storage_bucket": "geeknote-c6167.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127352812751:android:d15189b9137693239873ba",
+        "android_client_info": {
+          "package_name": "ru.geekbrains.geeknotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "127352812751-j5hcqk4hebmc012agvqo7q58uk9885dh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTKA3LZ9aHvLm4zVzAGPaa2CJ9OwLecFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "127352812751-j5hcqk4hebmc012agvqo7q58uk9885dh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
