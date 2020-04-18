@@ -10,7 +10,10 @@ import android.view.MenuItem
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.activity_note.*
+import kotlinx.android.synthetic.main.item_note.*
 import ru.geekbrains.geeknotes.R
+import ru.geekbrains.geeknotes.data.format
+import ru.geekbrains.geeknotes.data.getColorInt
 import ru.geekbrains.geeknotes.data.model.Color
 import ru.geekbrains.geeknotes.data.model.Note
 import ru.geekbrains.geeknotes.ui.base.BaseActivity
@@ -55,23 +58,14 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
     }
 
     private fun initView() {
-        if (note != null) {
-            titleEt.setText(note?.title ?: "")
-            bodyEt.setText(note?.note ?: "")
-            val color = when (note!!.color) {
-                Color.WHITE -> R.color.color_white
-                Color.VIOLET -> R.color.color_violet
-                Color.YELLOW -> R.color.color_yello
-                Color.RED -> R.color.color_red
-                Color.PINK -> R.color.color_pink
-                Color.GREEN -> R.color.color_green
-                Color.BLUE -> R.color.color_blue
-            }
 
-            titleEt.addTextChangedListener(textChangeListener)
-            bodyEt.addTextChangedListener(textChangeListener)
+        note?.run {
+            supportActionBar?.title = lastChanged.format()
 
-            toolbar.setBackgroundColor(resources.getColor(color))
+            titleEt.setText(title)
+            bodyEt.setText(note)
+
+            toolbar.setBackgroundColor(color.getColorInt(this@NoteActivity))
         }
     }
 

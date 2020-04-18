@@ -1,7 +1,6 @@
 package ru.geekbrains.geeknotes.ui.base
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
@@ -16,11 +15,10 @@ abstract class BaseActivity<T, S : BaseViewState<T>> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutRes)
-        viewModel.getViewState().observe(this, object : Observer<S> {
-            override fun onChanged(t: S?) {
-                if (t == null) return
-                if (t.data != null) renderData(t.data)
-                if (t.error != null) renderError(t.error)
+        viewModel.getViewState().observe(this, Observer<S> { t ->
+            t?.apply {
+                data?.let { renderData(it) }
+                error?.let { renderError(it) }
             }
         })
     }
@@ -31,9 +29,10 @@ abstract class BaseActivity<T, S : BaseViewState<T>> : AppCompatActivity() {
 
     abstract fun renderData(data: T)
 
-    private fun showError(error: String) {
-        val snackbar = Snackbar.make(mainRecycler, error, Snackbar.LENGTH_INDEFINITE)
-        snackbar.setAction(R.string.ok_bth_title) { snackbar.dismiss() }
-        snackbar.show()
+    protected fun showError(error: String) {
+        val snackbar = Snackbar.make(mainRecycler, error, Snackbar.LENGTH_INDEFINITE).apply {
+            setAction(R.string.ok_bth_title){dismiss()}
+            show()
+        }
     }
 }
